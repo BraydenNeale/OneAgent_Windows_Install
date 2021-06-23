@@ -1,6 +1,6 @@
 @echo off
 set preconfigured_binary_name=Dynatrace-OneAgent-Windows-[VERSION].msi
-set preconfigured_arguments=/L*v "%TEMP%\installation_msiexec_20210623-121356.log"
+set preconfigured_arguments=/L*v "%TEMP%\installation_msiexec_[DATE].log"
 set preconfigured_properties=PRECONFIGURED_PARAMETERS="--set-host-group= --set-server={[SERVER]} --set-tenant=[TENANT] --set-tenant-token=[TOKEN]" INTERNAL_LOG_PATH_FEEDBACK=".\dynatrace_log_path_feedback.conf"
 set additional_configuration=ADDITIONAL_CONFIGURATION="--set-host-group=DEFAULT --set-infra-only=true"
 set msi_path="%~dp0%preconfigured_binary_name%"
