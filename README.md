@@ -1,5 +1,48 @@
-# SCCM Deployment Script
+# Dynatrace Windows Agent Install
 
-https://www.dynatrace.com/support/help/technology-support/operating-systems/windows/installation/install-oneagent-on-windows/
+## Dynatrace Documentation
+[Install Oneagent on Windows](https://www.dynatrace.com/support/help/technology-support/operating-systems/windows/installation/install-oneagent-on-windows/)
 
-`Dynatrace-OneAgent-Windows.exe --unpack-msi`
+[Customize Oneagent Installation on Windows](https://www.dynatrace.com/support/help/technology-support/operating-systems/windows/installation/customize-oneagent-installation-on-windows/)
+
+## SCCM Install
+
+These instructions are for installing a generic - default Dynatrace OneAgent to Windows servers through SCCM (Microsoft System Center Configuration Manager).
+
+The agent installed will be in Infrastructure-Only mode (No code level injection) and will have a default Host_Group of DEFAULT.
+
+You can then use the Dynatrace tenant, automation or manual changes to refine agent properties such as the monitoring mode and host group.
+
+See **example** install and uninstall scripts under the SCCM folder:
+* [SCCM/install.bat](SCCM/install.bat)
+* [SCCM/uninstall.bat](SCCM/uninstall.bat)
+
+### Basic steps
+1. Download the Oneagent installer from your Dynatrace environment and then unpack the MSI package with:
+
+    `Dynatrace-OneAgent-Windows.exe --unpack-msi`
+
+    This will produce an msi package and an install.bat script. 
+
+    Note: This .bat script will be preconfigured with Dynatrace sever endpoints, tenant and token.
+
+2. Add additional_configuration to the install.bat file for Host-Group and Infra-Only mode:
+    
+    `set additional_configuration=ADDITIONAL_CONFIGURATION="--set-host-group=DEFAULT --set-infra-only=true"`
+
+    `@%windir%\system32\msiexec.exe /i %msi_path% %preconfigured_arguments% %preconfigured_properties% %additional_configuration% %~1 %~2 %~3 %~4 %~5 %~6 %~7 %~8 %~9 /quiet /qn >con:`
+
+3. You can use [SCCM/uninstall.bat](SCCM/uninstall.bat) as is, for uninstalling the agent [Uninstall OneAgent Windows](https://www.dynatrace.com/support/help/shortlink/oneagent-uninstall-windows#uninstall-oneagent-silently_)
+
+4. Provide an SCCM folder to your Windows/SCCM administrator to create a Dynatrace-OneAgent SCCM package. containing:
+    * Dynatrace-OneAgent-Windows.msi
+    * install.bat
+    * uninstall.bat
+
+5. In SCCM, create a Dynatrace OneAgent SCCM collection with this package
+
+6. Add the required servers to this Dynatrace OneAgent SCCM collection to install the agent
+
+7. You can refine and toggle agent properties using a utility such as [Oneagentctl-Wrapper](https://github.com/BraydenNeale/Oneagentctl-Wrapper).
+
+## Remote Powershell Install
