@@ -18,7 +18,14 @@ See **example** install and uninstall scripts under the SCCM folder:
 * [SCCM/uninstall.bat](SCCM/uninstall.bat)
 
 ### Basic steps
-1. Download the Oneagent installer from your Dynatrace environment and then unpack the MSI package with:
+1. Download the Oneagent installer from your Dynatrace environment
+    
+    You can automate the download with Powershell:
+    `powershell -command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://<ENV_ID>.live.dynatrace.com/api/v1/deployment/installer/agent/windows/default/latest?arch=x86&flavor=default' -Headers @{ 'Authorization' = 'Api-Token <PAAS_TOKEN>' } -OutFile 'Dynatrace-OneAgent-Windows.exe'"`
+    
+    Where: ENV_ID is your Dynatrace environment ID. e.g. abc12345 and PAAS_TOKEN is a Dynatrace PAAS token for that environment
+    
+    Then unpack the MSI package with:
 
     `Dynatrace-OneAgent-Windows.exe --unpack-msi`
 
@@ -27,6 +34,7 @@ See **example** install and uninstall scripts under the SCCM folder:
     Note: This .bat script will be preconfigured with Dynatrace sever endpoints, tenant and token.
 
 2. Add additional_configuration to the install.bat file for Host-Group and Infra-Only mode:
+   Where DEFAULT is the example host group shown here. Set this to something meaningful
 
     ADD LINE:
 
